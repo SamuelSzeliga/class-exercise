@@ -6,10 +6,14 @@ from pathlib import Path
 import pandas as pd
 
 from class6_7_netflix_utils import (
+    clean_text,
+    drop_missing_rows,
+    remove_iqr_outliers,
     drop_missing_rows,
     remove_duplicates,
     show_overview,
 )
+
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +54,8 @@ def main():
     show_overview(df)
     logger.info("Overview displayed")
 
+    df_original = df.copy()
+
     # TODO 6:
     before = len(df)
     df = remove_duplicates(df)
@@ -57,6 +63,23 @@ def main():
     df = drop_missing_rows(df)
     logger.info("Missing rows removed")
     logger.info(f"{before-len(df)} rows have been removed")
+
+    # TODO 3:
+    try:
+        df = remove_iqr_outliers(df, "runtime_minutes", 1.5)
+    except ValueError:
+        sys.exit(1)
+    logger.info("Removing outliers using iqr")
+    
+    # TODO 4:
+    for i in ["title", "type", "country"]:
+        df[col].apply(clean_text)
+        logger.info(f"Text Column {col} Cleaned")
+
+    # TODO 5:
+
+    report = {"rows_before": len(df_original), "rows_after": len(df), "rows_removed": len(df_original) - len(df)}
+    logger.info(f"Report: {report}")
 
 if __name__ == "__main__":
     main()
