@@ -19,3 +19,6 @@ venv/
 .vscode/
 .idea/
 .env
+
+class16_18/data/
+class20_21/data/
