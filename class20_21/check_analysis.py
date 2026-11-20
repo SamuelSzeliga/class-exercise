@@ -38,6 +38,12 @@ def summarize_years(df, window):
     return summary
 
 
+def filter_movies(df, min_rating):
+
+    df_new = df[df["rating"] >= min_rating]
+    return df_new[["title", "release_year", "rating", "genre"]]
+
+
 def main():
     df = pd.read_csv(Path("data") / "class20_movies.csv")
     print(df.groupby("genre")["rating"].mean())
